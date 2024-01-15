@@ -11,9 +11,19 @@
             "stop":     [11971, 9000, 39, 30]
         },
         {
+            "name":     "Doe Valley",
+            "start":    [5397, 9435, 17, 31],
+            "stop":     [6044, 9943, 20, 33]
+        },
+        {
             "name":     "Ekron",
             "start":    [7055, 8142, 23, 27],
             "stop":     [7526, 8582, 25, 28]
+        },
+        {
+            "name":     "Ekron North Army Barracks",
+            "start":    [7415, 7924, 24, 26],
+            "stop":     [7478, 7996, 24, 26]
         },
         {
             "name":     "Louisville",
@@ -51,6 +61,11 @@
             "stop":     [11428, 10807, 38, 36]
         },
         {
+            "name":     "Muldraugh West Army Barracks",
+            "start":    [9283, 8562, 30, 28],
+            "stop":     [9377, 8670, 31, 28]
+        },
+        {
             "name":     "Muldraugh Trainyard",
             "start":    [11423, 9543, 38, 41],
             "stop":     [11982, 10428, 39, 34]
@@ -66,7 +81,7 @@
             "stop":     [8438, 11951, 28, 39]
         },
         {
-            "name":     "Rosewood North Army",
+            "name":     "Rosewood North Army Barracks",
             "start":    [8057, 10186, 26, 33],
             "stop":     [8228, 10294, 27, 34]
         },
@@ -94,11 +109,6 @@
             "name":     "Westpoint",
             "start":    [10762, 6515, 35, 21],
             "stop":     [12209, 7160, 40, 23]
-        },
-        {
-            "name":     "West Surplus Store",
-            "start":    [5397, 9435, 17, 31],
-            "stop":     [6044, 9943, 20, 33]
         }
     ]
 }
