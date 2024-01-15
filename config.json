@@ -1,8 +1,8 @@
 {
-    "path":             "/home/steam/Zomboid/Saves/Multiplayer/servertest",
+    "path":             "/srv/steam/Zomboid/Saves/Multiplayer/servertest",
     "logs": {
         "save":         true,
-        "path":         "/home/steam/logs/mapreset.log"
+        "path":         "/srv/steam/Zomboid/Logs/mapreset.log"
     },
     "regions": [
         {
@@ -62,8 +62,8 @@
         },
         {
             "name":     "Rosewood",
-            "start":     [7917, 11227, 26, 37],
-            "stop":      [8438, 11951, 28, 39]
+            "start":    [7917, 11227, 26, 37],
+            "stop":     [8438, 11951, 28, 39]
         },
         {
             "name":     "Rosewood North Army",
@@ -96,24 +96,9 @@
             "stop":     [12209, 7160, 40, 23]
         },
         {
-            "name":      "West Surplus Store",
-            "start":     [5397, 9435, 17, 31],
-            "stop":      [6044, 9943, 20, 33]
-         },
-         {
-            "name":    "MOD: Blackwood",
-            "start":   [7800, 10500, 26, 35],
-            "stop":    [8100, 10800, 27, 36]
-        },
-        {
-            "name":    "MOD: Grapeseed",
-            "start":   [6930, 10790, 23, 35],
-            "stop":    [7870, 11460, 26, 38]
-        },
-        {
-             "name":    "MOD: Pitstop",
-             "start":   [8970, 11075, 29, 36],
-             "stop":    [9930, 11710, 33, 39]
-         }
+            "name":     "West Surplus Store",
+            "start":    [5397, 9435, 17, 31],
+            "stop":     [6044, 9943, 20, 33]
+        }
     ]
 }

@@ -12,22 +12,72 @@ ADJUST LINE 1 IF YOU ARE USING A DIFFERENT BINARY OR WINDOWS
 # ----------------------------------------------------------------------
 from json import load as jsonload
 from math import floor
-from os import listdir, remove
+from os import getenv, listdir, remove
 from os.path import split as path_split, abspath, join, isfile
 from time import time
-
+import argparse
 
 # ----------------------------------------------------------------------
 # CUSTOM LIBRARIES -----------------------------------------------------
 # ----------------------------------------------------------------------
 from common import logs
 
+# ----------------------------------------------------------------------
+# COMMAND LINE ARGUMENTS -----------------------------------------------
+# ----------------------------------------------------------------------
+def parse_args():
+    """Parses any arguments when the script runs
+
+    Args: None
+
+    Returns: Nothing
+    """
+
+    description = '''ProjectZomboid MapReset
+    
+    Environment Variables: 
+    PZ_MAPRESET_CONFIG    The exact path to a config file 
+    '''
+
+    parser = argparse.ArgumentParser(description=description, usage='use "%(prog)s --help" for more information', formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('--config', type=str, help='the exact path to a config file, overrides PZ_MAPRESET_CONFIG env var')
+    args = parser.parse_args()
 
 # ----------------------------------------------------------------------
 # CONFIGURATION --------------------------------------------------------
 # ----------------------------------------------------------------------
-GLOBAL_CONFIG = join(path_split(abspath(__file__))[0], "config.json")
+def get_config():
+    """Sets up the path to our config file
+    
+    * Checks first for an environmen variable.
+    * Then for the argument --config.
+    * Finally will set a sane default of the current directory that the
+      script is running out of.
 
+    Args: None
+
+    Returns:
+        string: Is the path to the json config file
+    """
+
+    # Set sane default
+    config =  join(path_split(abspath(__file__))[0], "config.json")
+    
+    # Check for environment variable
+    env_config = getenv('PZ_MAPRESET_CONFIG') if getenv('PZ_MAPRESET_CONFIG') is not None else None
+
+    # Check for argument
+    arg_config = args.config if args.config is not None else None
+
+    if env_config is not None:
+        # Override the default
+        config = env_config
+
+    if arg_config is not None:
+        # Override env and default
+        config = arg_config
+
+    return config
 
 # ----------------------------------------------------------------------
 # FUNCTIONS ------------------------------------------------------------
@@ -199,4 +249,6 @@ def main(user_config):
 # ROUTINE --------------------------------------------------------------
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
+    parse_args()
+    GLOBAL_CONFIG = get_config()
     main(GLOBAL_CONFIG)
