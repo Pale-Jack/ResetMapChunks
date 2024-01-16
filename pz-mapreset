@@ -30,7 +30,8 @@ def parse_args():
 
     Args: None
 
-    Returns: Nothing
+    Returns:
+        parse_args: Is the result of all parsed arguments
     """
 
     description = '''ProjectZomboid MapReset
@@ -40,13 +41,19 @@ def parse_args():
     '''
 
     parser = argparse.ArgumentParser(description=description, usage='use "%(prog)s --help" for more information', formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('--config', type=str, help='the exact path to a config file, overrides PZ_MAPRESET_CONFIG env var')
+    parser.add_argument('-d', '--dryrun', action='store_true', help='if set, no actions are taken but instead the intended actions are printed to stdout')
+    parser.add_argument('--config', type=str, help='the exact path to a config file, overrides PZ_MAPRESET_CONFIG environment variable')
+    parser.add_argument('--skipzombies', action='store_true', help='passing this argument will skip resetting zombie population in the affected region')
+    parser.add_argument('--skipstructures', action='store_true', help='passing this argument will skip resetting structures (i.e the map) in the affected region')
+    parser.add_argument('--skipresources', action='store_true', help='passing this argument will skip resetting loot and vehicle spawns in the affected region')
     args = parser.parse_args()
+
+    return args
 
 # ----------------------------------------------------------------------
 # CONFIGURATION --------------------------------------------------------
 # ----------------------------------------------------------------------
-def get_config():
+def get_config(args):
     """Sets up the path to our config file
     
     * Checks first for an environmen variable.
@@ -123,7 +130,7 @@ def load_configuration(file):
         raise FileNotFoundError(f"File not found: {file}")
 
 
-def resetmap(log, path,
+def resetmap(log, args, path,
              startX, startY, startChunkX, startChunkY,
              endX, endY, endChunkX, endChunkY):
     """Deletes a series of files that are within the boundaries.
@@ -157,23 +164,33 @@ def resetmap(log, path,
     for file in files:
         current_item = file[:-4].split('_')
         # Clear out Map files that are within our co-ordinates
-        if len(current_item) == 3 and current_item[0] == 'map':
+        if len(current_item) == 3 and current_item[0] == 'map' and args.skipstructures != True:
             if in_boundary(current_item[1], current_item[2],
                            startX, startY, endX, endY):
                 counter_map += 1
-                log.add(f"> Deleting {file}")
-                remove(join(path, file))
-        # If not a map file, but actually meta data then if it's in chunk data
+                if args.dryrun == True:
+                    log.add(f"> Deleting {file}")
+                    remove(join(path, file))
+                print(f"Removed {join(path, file)}")
 
-        # OLD METHOD: Trash chunkdata AND zombie population
-        #elif len(current_item) == 3 and (current_item[0] == 'chunkdata' or current_item[0] == 'zpop'):
-        # NEW METHOD: Don't delete zombie population to avoid multiplayer lag fest on regen
-        elif len(current_item) == 3 and current_item[0] == 'chunkdata':
+        # If not a map file, but actually meta data then if it's in chunk data
+        elif len(current_item) == 3 and current_item[0] == 'chunkdata' and args.skipresources != True:
             if in_boundary(current_item[1], current_item[2],
                            startChunkX, startChunkY, endChunkX, endChunkY):
                 counter_meta += 1
-                log.add(f"> Deleting {file}")
-                remove(join(path, file))
+                if args.dryrun == True:
+                    log.add(f"> Deleting {file}")
+                    remove(join(path, file))
+                print(f"Removed {join(path, file)}")
+
+        elif len(current_item) == 3 and current_item[0] == 'zpop' and args.skipzombies != True:
+            if in_boundary(current_item[1], current_item[2],
+                           startChunkX, startChunkY, endChunkX, endChunkY):
+                counter_meta += 1
+                if args.dryrun == True:
+                    log.add(f"> Deleting {file}")
+                    remove(join(path, file))
+                print(f"Removed {join(path, file)}")
 
     log.add_header("Summary")
     log.add(f"> Completed in {(time() - timer_start):.2f} seconds")
@@ -184,7 +201,7 @@ def resetmap(log, path,
 # ----------------------------------------------------------------------
 # MAIN -----------------------------------------------------------------
 # ----------------------------------------------------------------------
-def main(user_config):
+def main(user_config, args):
     """Main application routine
 
     Args:
@@ -192,6 +209,11 @@ def main(user_config):
     """
     # Load Configuration settings
     config = load_configuration(user_config)
+
+    print(f"Dry Run: {str(args.dryrun)}")
+    print(f"Skip Zombies: {str(args.skipzombies)}")
+    print(f"Skip Structures: {str(args.skipstructures)}")
+    print(f"Skip Resources: {str(args.skipresources)}")
 
     # Setup Logfile settings
     log = logs.NewLog(65, config['logs']['save'], config['logs']['path'])
@@ -231,7 +253,7 @@ def main(user_config):
     log.add_header("Reset Log")
 
     # Reset the selected boundaries
-    resetmap(log, config['path'],
+    resetmap(log, args, config['path'],
              config['regions'][selection]['start'][0],
              config['regions'][selection]['start'][1],
              config['regions'][selection]['start'][2],
@@ -249,6 +271,6 @@ def main(user_config):
 # ROUTINE --------------------------------------------------------------
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
-    parse_args()
-    GLOBAL_CONFIG = get_config()
-    main(GLOBAL_CONFIG)
+    ARGS = parse_args()
+    GLOBAL_CONFIG = get_config(ARGS)
+    main(GLOBAL_CONFIG, ARGS)
