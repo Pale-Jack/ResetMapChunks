@@ -161,6 +161,7 @@ def resetmap(log, args, path,
     endY = floor(endY/10)
 
     # Loop through the map files and delete any that are within our boundareies
+    print("Files Removed:")
     for file in files:
         current_item = file[:-4].split('_')
         # Clear out Map files that are within our co-ordinates
@@ -171,7 +172,7 @@ def resetmap(log, args, path,
                 if args.dryrun == True:
                     log.add(f"> Deleting {file}")
                     remove(join(path, file))
-                print(f"Removed {join(path, file)}")
+                print(str(join(path, file)))
 
         # If not a map file, but actually meta data then if it's in chunk data
         elif len(current_item) == 3 and current_item[0] == 'chunkdata' and args.skipresources != True:
@@ -181,7 +182,7 @@ def resetmap(log, args, path,
                 if args.dryrun == True:
                     log.add(f"> Deleting {file}")
                     remove(join(path, file))
-                print(f"Removed {join(path, file)}")
+                print(str(join(path, file)))
 
         elif len(current_item) == 3 and current_item[0] == 'zpop' and args.skipzombies != True:
             if in_boundary(current_item[1], current_item[2],
@@ -190,7 +191,7 @@ def resetmap(log, args, path,
                 if args.dryrun == True:
                     log.add(f"> Deleting {file}")
                     remove(join(path, file))
-                print(f"Removed {join(path, file)}")
+                print(str(join(path, file)))
 
     log.add_header("Summary")
     log.add(f"> Completed in {(time() - timer_start):.2f} seconds")
