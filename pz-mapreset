@@ -169,7 +169,7 @@ def resetmap(log, args, path,
             if in_boundary(current_item[1], current_item[2],
                            startX, startY, endX, endY):
                 counter_map += 1
-                if args.dryrun == True:
+                if args.dryrun == False:
                     log.add(f"> Deleting {file}")
                     remove(join(path, file))
                 print(str(join(path, file)))
@@ -179,7 +179,7 @@ def resetmap(log, args, path,
             if in_boundary(current_item[1], current_item[2],
                            startChunkX, startChunkY, endChunkX, endChunkY):
                 counter_meta += 1
-                if args.dryrun == True:
+                if args.dryrun == False:
                     log.add(f"> Deleting {file}")
                     remove(join(path, file))
                 print(str(join(path, file)))
@@ -188,7 +188,7 @@ def resetmap(log, args, path,
             if in_boundary(current_item[1], current_item[2],
                            startChunkX, startChunkY, endChunkX, endChunkY):
                 counter_meta += 1
-                if args.dryrun == True:
+                if args.dryrun == False:
                     log.add(f"> Deleting {file}")
                     remove(join(path, file))
                 print(str(join(path, file)))
